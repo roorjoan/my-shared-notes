@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [NoteController::class, 'shared'])->name('welcome');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('notes', NoteController::class)->only(['index', 'store', 'destroy']);
+    Route::patch('/notes/{id}', [NoteController::class, 'share'])->name('notes.share');
+});
