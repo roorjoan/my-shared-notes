@@ -27,9 +27,10 @@ class NoteRequest extends FormRequest
             return [
                 'title' => 'required|min:2',
                 'content' => 'required|min:2',
-                'shared' => []
+                'shared' => [],
             ];
         }
+
         return [
             'title' => 'required|min:2',
             'content' => 'required|min:2',

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Note;
-use Illuminate\Http\Request;
 use App\Http\Requests\NoteRequest;
+use App\Models\Note;
 
 class NoteController extends Controller
 {
@@ -37,7 +36,7 @@ class NoteController extends Controller
     {
         $note = Note::findOrFail($id);
 
-        $note->shared = !$note->shared;
+        $note->shared = ! $note->shared;
         $note->update();
 
         return to_route('notes.index');
