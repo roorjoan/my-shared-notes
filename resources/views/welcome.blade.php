@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-start">
+        <div class="row justify-content-md-start justify-content-center">
             @forelse ($notes as $note)
                 <div class="card text-start shadow me-3 mb-4" style="width: 20rem;">
                     <div class="card-body">

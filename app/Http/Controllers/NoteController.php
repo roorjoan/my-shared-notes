@@ -3,48 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NoteRequest;
-use App\Models\Note;
+use App\Repositories\INoteRepository;
 
 class NoteController extends Controller
 {
+    public function __construct(
+        private INoteRepository $noteRepository
+    ) {
+    }
+
     public function shared()
     {
-        $notes = Note::with('user')->where('shared', 1)->latest('updated_at')->get();
+        $notes = $this->noteRepository->sharedNotes();
 
         return view('welcome', compact('notes'));
     }
 
     public function index()
     {
-        $notes = Note::with('user')->where('user_id', auth()->user()->id)->get();
+        $notes = $this->noteRepository->userNotes();
 
         return view('notes.index', compact('notes'));
     }
 
     public function store(NoteRequest $request)
     {
-        Note::create([
-            'user_id' => auth()->user()->id,
-            'title' => $request->title,
-            'content' => $request->content,
-        ]);
+        $this->noteRepository->storeNote($request->all());
 
         return to_route('notes.index');
     }
 
     public function share($id)
     {
-        $note = Note::findOrFail($id);
-
-        $note->shared = ! $note->shared;
-        $note->update();
+        $this->noteRepository->shareNote($id);
 
         return to_route('notes.index');
     }
 
-    public function destroy(Note $note)
+    public function destroy($id)
     {
-        $note->delete();
+        $this->noteRepository->destroyNote($id);
 
         return to_route('notes.index');
     }
